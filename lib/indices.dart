@@ -9,16 +9,16 @@ void indices(String baseHost, List<String> arguments) async {
       headers: headers
   );
   final match = arguments.isNotEmpty ? arguments[0] : null;
-  print(match);
   final indices = convert.jsonDecode(response);
   if (match == null) {
     for (final index in indices) {
       print("${index['index']}\t${index['health']}");
     }
   } else {
+    print(match);
     for (final index in indices) {
       if (index['index'].toString().contains(match)) {
-        print("${index['index']}\t${index['health']}");
+        print("\t ${index['index']}\t${index['health']}");
       }
     }
   }

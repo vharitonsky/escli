@@ -31,6 +31,21 @@ Future<String> getSelectedClusterHost() async {
   return null;
 }
 
+Future<List<String>> getClusterNames() async {
+  final settings = await getSettings();
+  List<dynamic> clusters = (settings['clusters'] ?? []);
+  final names = clusters.map((e) => e['name'].toString()).toList();
+  return names;
+}
+
+void writeArguments(List<String> arguments) async{
+  final f = io.File('args').openWrite();
+  f.write('!!!!!!!');
+  f.write(arguments.join(' '));
+  await f.close();
+}
+
+
 void setSettings(Map<String, dynamic> settings) async{
   final f = io.File(getConfigPath()).openWrite();
   f.write(convert.jsonEncode(settings));

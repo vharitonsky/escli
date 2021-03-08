@@ -1,3 +1,5 @@
+import 'dart:io' as io;
+
 import 'package:escli/shards.dart' as shards;
 import 'package:escli/indices.dart' as indices;
 import 'package:escli/health.dart' as health;
@@ -7,13 +9,17 @@ import 'package:escli/stats.dart' as stats;
 import 'package:escli/select.dart' as select;
 import 'package:escli/add.dart' as add;
 import 'package:escli/clusters.dart' as clusters;
+import 'package:escli/compgen.dart' as compgen;
 import 'package:escli/util.dart' as util;
+
 
 void main(List<String> arguments) async {
   final command = arguments[0];
   final baseHost = await util.getSelectedClusterHost();
-
-  if (command == 'clusters'){
+  if(command == '_compgen') {
+    print(await compgen.compgen(arguments.sublist(1)));
+    return;
+  }else if (command == 'clusters'){
     clusters.clusters();
   }else if (command == 'add') {
     add.add(arguments[1], arguments[2]);
