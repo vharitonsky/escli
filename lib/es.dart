@@ -12,3 +12,14 @@ Future<List<String>> getIndexNames(String baseHost) async {
   final names = indices.map((i) => i['index'].toString()).toList();
   return names;
 }
+
+
+Future<List<String>> getNodeNames(String baseHost) async {
+  final response = await http.read(Uri.http(
+      '$baseHost', '/_cat/nodes'),
+      headers: headers
+  );
+  final List<dynamic> nodes = convert.jsonDecode(response);
+  final names = nodes.map((n) => n['name'].toString()).toList();
+  return names;
+}

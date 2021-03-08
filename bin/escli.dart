@@ -1,5 +1,3 @@
-import 'dart:io' as io;
-
 import 'package:escli/shards.dart' as shards;
 import 'package:escli/indices.dart' as indices;
 import 'package:escli/health.dart' as health;

@@ -28,6 +28,13 @@ Future<String> compgen(List<String> arguments) async {
     }
     return names.join(' ');
   }
+  if (arguments[0] == 'nodes') {
+    final names = await es.getNodeNames(await util.getSelectedClusterHost());
+    if(arguments.length > 2 && arguments[2] != null) {
+      return names.where((element) => element.startsWith(arguments[2])).toList().join(' ');
+    }
+    return names.join(' ');
+  }
   if(arguments.length > 1 && arguments[1] != null) {
     return COMMANDS.where((element) =>
         element.startsWith(arguments[1])).join(' ');
