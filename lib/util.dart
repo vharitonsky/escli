@@ -9,7 +9,8 @@ void pprintJson(String jsonData) {
 
 String getConfigPath() {
   final home = io.Platform.environment['HOME'] ?? io.Platform.environment['USERPROFILE'];
-  return path.join(home, '.escli.conf');
+  assert(home != null);
+  return path.join(home ?? '', '.escli.conf');
 }
 
 Future<Map<String, dynamic>> getSettings() async{
@@ -21,7 +22,7 @@ Future<Map<String, dynamic>> getSettings() async{
   }
 }
 
-Future<String> getSelectedClusterHost() async {
+Future<String?> getSelectedClusterHost() async {
   final settings = await getSettings();
   for (final cluster in settings['clusters'] ?? []) {
     if (cluster['selected']) {
@@ -40,7 +41,6 @@ Future<List<String>> getClusterNames() async {
 
 void writeArguments(List<String> arguments) async{
   final f = io.File('args').openWrite();
-  f.write('!!!!!!!');
   f.write(arguments.join(' '));
   await f.close();
 }

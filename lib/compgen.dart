@@ -22,14 +22,22 @@ Future<String> compgen(List<String> arguments) async {
     return names.join(' ');
   }
   if (arguments[0] == 'indices') {
-    final names = await es.getIndexNames(await util.getSelectedClusterHost());
+    final host = await util.getSelectedClusterHost();
+    if (host == null){
+      return '';
+    }
+    final names = await es.getIndexNames(host);
     if(arguments.length > 2 && arguments[2] != null) {
       return names.where((element) => element.startsWith(arguments[2])).toList().join(' ');
     }
     return names.join(' ');
   }
   if (arguments[0] == 'nodes') {
-    final names = await es.getNodeNames(await util.getSelectedClusterHost());
+    final host = await util.getSelectedClusterHost();
+    if (host == null){
+      return '';
+    }
+    final names = await es.getNodeNames(host);
     if(arguments.length > 2 && arguments[2] != null) {
       return names.where((element) => element.startsWith(arguments[2])).toList().join(' ');
     }

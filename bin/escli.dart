@@ -14,6 +14,10 @@ import 'package:escli/util.dart' as util;
 void main(List<String> arguments) async {
   final command = arguments[0];
   final baseHost = await util.getSelectedClusterHost();
+  if(baseHost == null) {
+    print('No es host selected, use escli add to add cluster and escli select');
+    return;
+  }
   if(command == '_compgen') {
     print(await compgen.compgen(arguments.sublist(1)));
     return;
