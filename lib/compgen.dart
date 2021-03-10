@@ -11,6 +11,7 @@ const COMMANDS = [
   'settings',
   'indices',
   'shards',
+  'templates',
 ];
 
 Future<String> compgen(List<String> arguments) async {
@@ -27,6 +28,17 @@ Future<String> compgen(List<String> arguments) async {
       return '';
     }
     final names = await es.getIndexNames(host);
+    if(arguments.length > 2 && arguments[2] != null) {
+      return names.where((element) => element.startsWith(arguments[2])).toList().join(' ');
+    }
+    return names.join(' ');
+  }
+  if (arguments[0] == 'templates') {
+    final host = await util.getSelectedClusterHost();
+    if (host == null){
+      return '';
+    }
+    final names = await es.getTemplateNames(host);
     if(arguments.length > 2 && arguments[2] != null) {
       return names.where((element) => element.startsWith(arguments[2])).toList().join(' ');
     }

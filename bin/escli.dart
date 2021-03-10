@@ -7,6 +7,7 @@ import 'package:escli/stats.dart' as stats;
 import 'package:escli/select.dart' as select;
 import 'package:escli/add.dart' as add;
 import 'package:escli/clusters.dart' as clusters;
+import 'package:escli/templates.dart' as templates;
 import 'package:escli/compgen.dart' as compgen;
 import 'package:escli/util.dart' as util;
 
@@ -39,6 +40,8 @@ void main(List<String> arguments) async {
     indices.indices(baseHost, arguments.sublist(1));
   } else if (command == 'shards') {
     shards.shards(baseHost, arguments.sublist(1));
+  } else if (command == 'templates') {
+    templates.templates(baseHost, arguments.sublist(1));
   } else {
     print('Incorrect command or insufficient arguments');
   }
