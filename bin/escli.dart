@@ -24,7 +24,7 @@ void main(List<String> arguments) async {
     print(await compgen.compgen(arguments.sublist(1)));
     return;
   }else if (command == 'clusters'){
-    clusters.clusters();
+    clusters.clusters(arguments.sublist(1));
   } else if (command == 'add') {
     add.add(arguments[1], arguments[2]);
   } else if (command == 'remove') {

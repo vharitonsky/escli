@@ -12,9 +12,14 @@ const COMMANDS = [
   'set',
   'index',
   'indices',
+  'select',
   'shards',
   'templates',
 ];
+
+class SubCommands{
+  static var index = ['open', 'close', 'create', 'delete', 'reroute'];
+}
 
 Future<String> compgen(List<String> arguments) async {
   if (arguments[0] == 'select') {
@@ -56,6 +61,13 @@ Future<String> compgen(List<String> arguments) async {
       return names.where((element) => element.startsWith(arguments[2])).toList().join(' ');
     }
     return names.join(' ');
+  }
+  if (arguments[0] == 'index') {
+    if (arguments.length > 1) {
+      var found = SubCommands.index.where((element) => element.startsWith(arguments[2])).toList();
+      if (found.isNotEmpty) return found.join(' ');
+    }
+    return SubCommands.index.join(' ');
   }
   if(arguments.length > 1 && arguments[1] != null) {
     return COMMANDS.where((element) =>

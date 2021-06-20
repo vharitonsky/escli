@@ -1,6 +1,20 @@
 import 'dart:convert' as convert;
+import 'package:colorize/colorize.dart';
 import 'package:path/path.dart' as path;
 import 'dart:io' as io;
+
+class Cluster {
+  final String host;
+  final String name;
+  final bool selected;
+
+  Cluster({
+    required this.host,
+    required this.name,
+    required this.selected,
+  });
+
+}
 
 void pprintJson(String jsonData) {
   final encoder = convert.JsonEncoder.withIndent('  ');
@@ -20,6 +34,19 @@ Future<Map<String, dynamic>> getSettings() async{
   } else {
     return {};
   }
+}
+
+Future<List<Cluster>> getClusters() async {
+  final settings = await getSettings();
+  var clusters = <Cluster>[];
+  for (final cluster in settings['clusters'] ?? []) {
+    clusters.add(Cluster(
+      host: cluster['host'],
+      name: cluster['name'],
+      selected: cluster['selected'] ?? false,
+    ));
+  }
+  return clusters;
 }
 
 Future<String?> getSelectedClusterHost() async {
@@ -50,4 +77,15 @@ void setSettings(Map<String, dynamic> settings) async{
   final f = io.File(getConfigPath()).openWrite();
   f.write(convert.jsonEncode(settings));
   await f.close();
+}
+
+String colorizeHealth(String health) {
+  var coloredHealth = Colorize(health);
+  if(health == 'green') {
+    return coloredHealth.green().toString();
+  } else if (health == 'yellow') {
+    return coloredHealth.yellow().toString();
+  } else {
+    return coloredHealth.red().toString();
+  }
 }
