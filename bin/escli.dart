@@ -6,6 +6,7 @@ import 'package:escli/settings.dart' as settings;
 import 'package:escli/stats.dart' as stats;
 import 'package:escli/select.dart' as select;
 import 'package:escli/add.dart' as add;
+import 'package:escli/remove.dart' as remove;
 import 'package:escli/clusters.dart' as clusters;
 import 'package:escli/templates.dart' as templates;
 import 'package:escli/compgen.dart' as compgen;
@@ -14,8 +15,8 @@ import 'package:escli/util.dart' as util;
 
 void main(List<String> arguments) async {
   final command = arguments[0];
-  final baseHost = await util.getSelectedClusterHost();
-  if(baseHost == null) {
+  final baseHost = await util.getSelectedClusterHost() ?? '';
+  if(baseHost == '' && !['add', 'remove', 'clusters', 'select'].contains(command)) {
     print('No es host selected, use escli add to add cluster and escli select');
     return;
   }
@@ -24,8 +25,10 @@ void main(List<String> arguments) async {
     return;
   }else if (command == 'clusters'){
     clusters.clusters();
-  }else if (command == 'add') {
+  } else if (command == 'add') {
     add.add(arguments[1], arguments[2]);
+  } else if (command == 'remove') {
+    remove.remove(arguments[1]);
   } else if (command == 'select'){
     select.select(arguments[1]);
   } else if (command == 'health') {
@@ -36,8 +39,12 @@ void main(List<String> arguments) async {
     nodes.nodes(baseHost, arguments.sublist(1));
   } else if (command == 'settings'){
     settings.settings(baseHost, arguments.sublist(1));
+  } else if (command == 'set'){
+    settings.set(baseHost, arguments.sublist(1));
   } else if (command == 'indices') {
     indices.indices(baseHost, arguments.sublist(1));
+  } else if (command == 'index') {
+    indices.index(baseHost, arguments.sublist(1));
   } else if (command == 'shards') {
     shards.shards(baseHost, arguments.sublist(1));
   } else if (command == 'templates') {
