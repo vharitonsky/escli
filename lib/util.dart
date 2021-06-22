@@ -3,6 +3,14 @@ import 'package:colorize/colorize.dart';
 import 'package:path/path.dart' as path;
 import 'dart:io' as io;
 
+enum ClusterHealth{
+  red,
+  green,
+  yellow,
+  unreachable
+}
+
+
 class Cluster {
   final String host;
   final String name;
@@ -79,13 +87,26 @@ void setSettings(Map<String, dynamic> settings) async{
   await f.close();
 }
 
-String colorizeHealth(String health) {
-  var coloredHealth = Colorize(health);
-  if(health == 'green') {
-    return coloredHealth.green().toString();
-  } else if (health == 'yellow') {
-    return coloredHealth.yellow().toString();
-  } else {
-    return coloredHealth.red().toString();
+ClusterHealth parseHealth(String health) {
+  switch (health) {
+    case 'red':
+      return ClusterHealth.red;
+    case 'yellow':
+      return ClusterHealth.yellow;
+    case 'green':
+      return ClusterHealth.green;
+    default:
+      return ClusterHealth.unreachable;
+  }
+}
+
+String colorizeHealth(ClusterHealth health) {
+  switch(health) {
+    case ClusterHealth.green:
+      return Colorize('green').green().toString();
+    case ClusterHealth.yellow:
+      return Colorize('yellow').yellow().toString();
+    default:
+      return Colorize(health.toString()).red().toString();
   }
 }

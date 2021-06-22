@@ -4,10 +4,36 @@ import 'package:escli/util.dart' as util;
 import 'health.dart';
 
 void clusters(List<String> arguments) async {
+  var subcommand = arguments.isNotEmpty ? arguments[0]: '';
   final clusters = await util.getClusters();
-  if (arguments.isNotEmpty && arguments[0] == 'health') {
+  if (subcommand == 'health') {
     for (final cluster in clusters) {
-      print('${cluster.name} ${cluster.host} ${await getHealth(cluster.host)}');
+      print('${cluster.name} ${cluster.host} ${util.colorizeHealth(await getHealth(cluster.host))}');
+    }
+    return;
+  } else if (subcommand == 'red') {
+    for (final cluster in clusters) {
+      var health = await getHealth(cluster.host);
+      if ([util.ClusterHealth.red, util.ClusterHealth.unreachable].contains(
+          health)) {
+        print('${cluster.name} ${cluster.host} ${util.colorizeHealth(health)}');
+      }
+    }
+    return;
+  } else if (subcommand == 'yellow'){
+    for (final cluster in clusters) {
+      var health = await getHealth(cluster.host);
+      if (health == util.ClusterHealth.yellow) {
+        print('${cluster.name} ${cluster.host} ${util.colorizeHealth(health)}');
+      }
+    }
+    return;
+  } else if (subcommand == 'green'){
+    for (final cluster in clusters) {
+      var health = await getHealth(cluster.host);
+      if (health == util.ClusterHealth.green) {
+        print('${cluster.name} ${cluster.host} ${util.colorizeHealth(health)}');
+      }
     }
     return;
   } else {

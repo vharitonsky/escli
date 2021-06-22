@@ -16,7 +16,7 @@ void settings(String baseHost, List<String> arguments) async {
     data = (await http.read(
         Uri.http('$baseHost', '/$index/_settings'), headers: headers
     )).toString();
-  }else {
+  } else {
     data = (await http.read(
         Uri.http('$baseHost', '/_cluster/settings'), headers: headers
     )).toString();
