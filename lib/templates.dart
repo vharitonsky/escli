@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 const headers = {'Accept': 'application/json'};
 
 void templates(String baseHost, List<String> arguments) async {
-  if(arguments.isEmpty){
+  if (arguments.isEmpty) {
     final response = await http.read(
       Uri.http('$baseHost', '/_cat/templates'),
       headers: headers,
