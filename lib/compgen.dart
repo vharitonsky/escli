@@ -14,6 +14,7 @@ const COMMANDS = [
   'set',
   'index',
   'indices',
+  'indices_by_sizes',
   'select',
   'shards',
   'templates',

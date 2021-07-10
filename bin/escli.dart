@@ -43,7 +43,9 @@ void main(List<String> arguments) async {
     settings.set(baseHost, arguments.sublist(1));
   } else if (command == 'indices') {
     indices.indices(baseHost, arguments.sublist(1));
-  } else if (command == 'index') {
+  }else if (command == 'indices_by_size') {
+    indices.indicesBySize(baseHost, arguments.sublist(1));
+  }else if (command == 'index') {
     indices.index(baseHost, arguments.sublist(1));
   } else if (command == 'shards') {
     shards.shards(baseHost, arguments.sublist(1));

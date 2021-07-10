@@ -5,6 +5,8 @@ import 'dart:io' as io;
 
 enum ClusterHealth { red, green, yellow, unreachable }
 
+final LETTERS = RegExp(r'([a-z]+)');
+
 class Cluster {
   final String host;
   final String name;
@@ -103,5 +105,31 @@ String colorizeHealth(ClusterHealth health, {String text = ''}) {
       return Colorize(text.isNotEmpty ? text : health.toString())
           .red()
           .toString();
+  }
+}
+
+double sizeToBytes(String sizeStr) {
+  sizeStr = sizeStr.toLowerCase();
+  final match = LETTERS.firstMatch(sizeStr);
+  if (match == null) {
+    return 0;
+  }
+  final value = match.group(0);
+  if (value == null) {
+    return 0;
+  }
+  sizeStr = sizeStr.replaceFirst(value, '');
+  final size = double.parse(sizeStr);
+  switch (value) {
+    case 'gb':
+      return size * 1024 * 1024 * 1024;
+    case 'mb':
+      return size * 1024 * 1024;
+    case 'kb':
+      return size * 1024;
+    case 'b':
+      return 0;
+    default:
+      return 0;
   }
 }

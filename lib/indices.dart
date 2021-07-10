@@ -1,4 +1,5 @@
 import 'dart:convert' as convert;
+import 'package:escli/util.dart';
 import 'package:http/http.dart' as http;
 import 'package:escli/util.dart' as util;
 import 'dart:io' as io;
@@ -30,8 +31,31 @@ void indices(String baseHost, List<String> arguments) async {
   if (match != null) {
     indices = indices.where((element) => element.name.contains(match)).toList();
   }
+  indices.sort((a, b) => a.name.compareTo(b.name));
+  _printIndices(indices);
+}
+
+void indicesBySize(String baseHost, List<String> arguments) async {
+  final match = arguments.isNotEmpty ? arguments[0] : null;
+  var indices = await getIndices(baseHost);
+  if (match != null) {
+    indices = indices.where((element) => element.name.contains(match)).toList();
+  }
+  indices.sort((a, b) => sizeToBytes(a.size).compareTo(sizeToBytes(b.size)));
+  _printIndices(indices);
+}
+
+String _justify(String token, int padLeft) {
+  return (' ' * padLeft) + token;
+}
+
+void _printIndices(List<Index> indices) {
   for (final index in indices) {
-    print('\t${util.colorizeHealth(index.health, text: index.name)}');
+    final size = _justify(index.size, 40 - index.name.length);
+    final replicas = _justify(index.replicas, 10 - index.size.length);
+    final docs = _justify(index.docs, 5 - index.replicas.length);
+    print(
+        '${util.colorizeHealth(index.health, text: index.name)}$size$replicas$docs');
   }
 }
 
