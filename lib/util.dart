@@ -1,4 +1,5 @@
 import 'dart:convert' as convert;
+import 'dart:io';
 import 'package:colorize/colorize.dart';
 import 'package:path/path.dart' as path;
 import 'dart:io' as io;
@@ -20,8 +21,12 @@ class Cluster {
 }
 
 void pprintJson(String jsonData) {
-  final encoder = convert.JsonEncoder.withIndent('  ');
-  print(encoder.convert(convert.jsonDecode(jsonData)));
+  if (stdout.hasTerminal) {
+    print(highlightJson(convert.jsonDecode(jsonData)));
+  } else {
+    final encoder = convert.JsonEncoder.withIndent('  ');
+    print(encoder.convert(convert.jsonDecode(jsonData)));
+  }
 }
 
 String getConfigPath() {
@@ -107,6 +112,48 @@ String colorizeHealth(ClusterHealth health, {String text = ''}) {
           .toString();
   }
 }
+
+const INDENT = 2;
+
+String highlightJson(dynamic decoded, {int indent = 0, scalarIndent: 0, String buffer = ''}) {
+  if (decoded is Map) {
+    buffer += ' ' * scalarIndent + '{\n';
+    indent += INDENT;
+    var keys = decoded.keys.toList();
+    keys.asMap().forEach((i, value) {
+      buffer += ' ' * indent + Colorize('"' +value + '"').blue().toString() + ': ';
+      buffer += highlightJson(decoded[keys[i]], indent: indent, scalarIndent: 0);
+      if (i != keys.length -1) {
+        buffer += ',';
+      }
+      buffer += '\n';
+    });
+    Colorize().white()
+    buffer += ' ' * (indent - INDENT) + '}';
+  } else if (decoded is List) {
+    var keysLen = decoded.length;
+    if (keysLen == 0) {
+      buffer += '[]';
+    } else {
+      buffer += '[\n';
+      indent += INDENT;
+      decoded.asMap().forEach((key, value) {
+        buffer += highlightJson(value, indent: indent, scalarIndent: indent);
+        if (key != keysLen - 1) {
+          buffer += ',';
+        }
+        buffer += '\n';
+      });
+      buffer += ' ' * (indent - INDENT) + ']';
+    }
+  } else if (decoded is int || decoded is double){
+    buffer += ' ' * scalarIndent + decoded.toString();
+  } else {
+    buffer += ' ' * scalarIndent + Colorize('"' + decoded.toString() + '"').green().toString();
+  }
+  return buffer;
+}
+
 
 double sizeToBytes(String sizeStr) {
   sizeStr = sizeStr.toLowerCase();
