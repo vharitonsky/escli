@@ -115,20 +115,22 @@ String colorizeHealth(ClusterHealth health, {String text = ''}) {
 
 const INDENT = 2;
 
-String highlightJson(dynamic decoded, {int indent = 0, scalarIndent: 0, String buffer = ''}) {
+String highlightJson(dynamic decoded,
+    {int indent = 0, scalarIndent: 0, String buffer = ''}) {
   if (decoded is Map) {
     buffer += ' ' * scalarIndent + '{\n';
     indent += INDENT;
     var keys = decoded.keys.toList();
     keys.asMap().forEach((i, value) {
-      buffer += ' ' * indent + Colorize('"' +value + '"').blue().toString() + ': ';
-      buffer += highlightJson(decoded[keys[i]], indent: indent, scalarIndent: 0);
-      if (i != keys.length -1) {
+      buffer +=
+          ' ' * indent + Colorize('"' + value + '"').blue().toString() + ': ';
+      buffer +=
+          highlightJson(decoded[keys[i]], indent: indent, scalarIndent: 0);
+      if (i != keys.length - 1) {
         buffer += ',';
       }
       buffer += '\n';
     });
-    Colorize().white()
     buffer += ' ' * (indent - INDENT) + '}';
   } else if (decoded is List) {
     var keysLen = decoded.length;
@@ -146,14 +148,14 @@ String highlightJson(dynamic decoded, {int indent = 0, scalarIndent: 0, String b
       });
       buffer += ' ' * (indent - INDENT) + ']';
     }
-  } else if (decoded is int || decoded is double){
+  } else if (decoded is int || decoded is double) {
     buffer += ' ' * scalarIndent + decoded.toString();
   } else {
-    buffer += ' ' * scalarIndent + Colorize('"' + decoded.toString() + '"').green().toString();
+    buffer += ' ' * scalarIndent +
+        Colorize('"' + decoded.toString() + '"').green().toString();
   }
   return buffer;
 }
-
 
 double sizeToBytes(String sizeStr) {
   sizeStr = sizeStr.toLowerCase();
